@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas
-app.use('/personas', require('./routes/personas'));
-app.use('/objetos', require('./routes/objetos'));
-app.use('/prestamos', require('./routes/prestamos'));
-app.use('/categorias', require('./routes/categorias'));
+app.use('/api/personas', require('./routes/personas'));
+app.use('/api/objetos', require('./routes/objetos'));
+app.use('/api/prestamos', require('./routes/prestamos'));
+app.use('/api/categorias', require('./routes/categorias'));
 
 // Solo escuchar si se ejecuta directamente (no serverless)
 if (require.main === module) {

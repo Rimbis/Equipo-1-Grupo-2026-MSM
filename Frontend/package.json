@@ -1,12 +1,12 @@
 {
-  "name": "bun-react-template",
+  "name": "biblioteca-tec",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --hot src/index.html",
-    "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
-    "start": "NODE_ENV=production bun src/index.html"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/bun": "latest"
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.0"
   }
 }
