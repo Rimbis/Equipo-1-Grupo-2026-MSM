@@ -1,0 +1,14 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno y credenciales
+.env
+.env.*
+!.env.example
+
+# Compilaciones
+dist/
+
+# Archivos del sistema y registros
+.DS_Store
+*.log

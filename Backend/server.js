@@ -14,9 +14,10 @@ app.use('/api/categorias', require('./routes/categorias'));
 
 // Solo escuchar si se ejecuta directamente (no serverless)
 if (require.main === module) {
-  app.listen(process.env.PORT || 3000, () => {
-    console.log(`Servidor corriendo en puerto ${process.env.PORT || 3000}`);
+  app.listen(process.env.PORT || 4000, () => {
+    console.log(`Servidor corriendo en puerto ${process.env.PORT || 4000}`);
   });
 }
+
 
 module.exports = app;
