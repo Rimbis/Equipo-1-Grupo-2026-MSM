@@ -15,8 +15,12 @@ router.get('/', async (req, res) => {
 // Agregar nuevo objeto
 router.post('/add', async (req, res) => {
     try {
-        const nuevo = await Objeto.create(req.body);
-        res.status(201).json({ mensaje: 'Objeto guardado', data: nuevo });
+        const { nombre } = req.body;
+        if (!nombre || !nombre.trim()) {
+            return res.status(400).json({ message: 'El nombre es requerido' });
+        }
+        const nueva = await Categoria.create({ nombre });
+        res.status(201).json({ mensaje: 'Categoría creada', data: nueva });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -26,13 +30,16 @@ router.post('/add', async (req, res) => {
 router.patch('/:id/estado', async (req, res) => {
     try {
         const { estado } = req.body;
+        const estadosValidos = ['disponible', 'prestado'];
+        if (!estadosValidos.includes(estado)) {
+            return res.status(400).json({ message: 'Estado inválido' });
+        }
         const actualizado = await Objeto.updateEstado(req.params.id, estado);
         res.json({ mensaje: 'Estado actualizado', data: actualizado });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-
 router.delete('/:id', async (req, res) => {
     try {
         const eliminado = await Objeto.delete(req.params.id);

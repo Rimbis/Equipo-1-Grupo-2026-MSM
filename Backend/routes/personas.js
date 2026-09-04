@@ -31,7 +31,11 @@ router.delete('/:id', async (req, res) => {
 // Crear persona
 router.post('/', async (req, res) => {
     try {
+
         const { nombre, apellido, curso } = req.body;
+        if (!nombre || !nombre.trim() || !apellido || !apellido.trim() || !curso || !curso.trim()) {
+            return res.status(400).json({ message: 'Nombre, apellido y curso son requeridos' });
+        }
         const result = await pool.query(
             'INSERT INTO personas (nombre, apellido, curso) VALUES ($1, $2, $3) RETURNING *',
             [nombre, apellido, curso]
