@@ -22,4 +22,15 @@ router.post('/add', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const eliminada = await Categoria.delete(req.params.id);
+        if (!eliminada) return res.status(403).json({ message: 'Esta categoría es predeterminada y no se puede eliminar.' });
+        res.json({ mensaje: 'Categoría eliminada correctamente' });
+    } catch (error) {
+        if (error.code === '23503') return res.status(409).json({ message: 'No se puede eliminar porque hay objetos asociados a esta categoría.' });
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = router;
