@@ -15,12 +15,15 @@ router.get('/', async (req, res) => {
 // Agregar nuevo objeto
 router.post('/add', async (req, res) => {
     try {
-        const { nombre } = req.body;
+        const { nombre, categoria_id } = req.body;
         if (!nombre || !nombre.trim()) {
             return res.status(400).json({ message: 'El nombre es requerido' });
         }
-        const nueva = await Categoria.create({ nombre });
-        res.status(201).json({ mensaje: 'Categoría creada', data: nueva });
+        if (!categoria_id) {
+            return res.status(400).json({ message: 'La categoría es requerida' });
+        }
+        const nuevo = await Objeto.create({ nombre, categoria_id });
+        res.status(201).json({ mensaje: 'Objeto creado', data: nuevo });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
