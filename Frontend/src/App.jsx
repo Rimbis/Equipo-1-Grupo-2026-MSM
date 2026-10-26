@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, NavLink, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Inicio from './componentes/Inicio';
 import Objeto from './componentes/Objeto';
@@ -7,7 +7,7 @@ import Prestamo from './componentes/Prestamo';
 import Categorias from './componentes/Categorias';
 import CargaDatos from './componentes/CargaDatos';
 import Login from './componentes/Login';
-import { haySesion, cerrarSesion } from './services/api';
+import { haySesion, cerrarSesion, verificarSesion } from './services/api';
 import './App.css';
 
 const enlaces = [
@@ -44,19 +44,33 @@ function Layout({ onLogout }) {
 }
 
 export default function App() {
-  const [logueado, setLogueado] = useState(haySesion());
+  // 'verificando': hay token guardado y se está confirmando con GET /api/auth/me
+  const [sesion, setSesion] = useState(haySesion() ? 'verificando' : 'no');
+
+  useEffect(() => {
+    if (sesion !== 'verificando') return;
+    let activo = true;
+    verificarSesion().then((ok) => activo && setSesion(ok ? 'si' : 'no'));
+    return () => { activo = false; };
+  }, []);
+
+  const logueado = sesion === 'si';
 
   const salir = () => {
     cerrarSesion();
-    setLogueado(false);
+    setSesion('no');
   };
+
+  if (sesion === 'verificando') {
+    return <div className="estado-pagina"><span className="spinner" />Verificando sesión...</div>;
+  }
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/login"
-          element={logueado ? <Navigate to="/" replace /> : <Login onLogin={() => setLogueado(true)} />}
+          element={logueado ? <Navigate to="/" replace /> : <Login onLogin={() => setSesion('si')} />}
         />
 
         {/* Todo lo que está acá adentro requiere sesión */}

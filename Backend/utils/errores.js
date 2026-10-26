@@ -9,6 +9,14 @@ class ErrorApp extends Error {
     }
 }
 
+// Error de reglas de negocio. Las rutas y modelos lo usan como new NegocioError(mensaje, status).
+class NegocioError extends ErrorApp {
+    constructor(mensaje, status = 400, opciones) {
+        super(status, mensaje, opciones);
+        this.name = 'NegocioError';
+    }
+}
+
 const crear = (status, mensajePorDefecto) => (mensaje = mensajePorDefecto, opciones) =>
     new ErrorApp(status, mensaje, opciones);
 
@@ -66,4 +74,4 @@ const textoValido = (texto) => {
     return typeof texto === 'string' && texto.trim().length > 0;
 };
 
-module.exports = { ErrorApp, errores, asyncHandler, traducirErrorPg, validarId, textoValido };
+module.exports = { ErrorApp, NegocioError, errores, asyncHandler, traducirErrorPg, validarId, textoValido };

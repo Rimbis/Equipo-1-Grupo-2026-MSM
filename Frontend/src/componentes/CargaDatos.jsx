@@ -55,27 +55,36 @@ export default function CargaDatos() {
     setError('');
 
     try {
+      let respuesta;
       if (tipo === 'objeto') {
-        await crearObjeto({ ...objeto, categoria_id: Number(objeto.categoria_id) });
+        respuesta = await crearObjeto({
+          nombre: objeto.nombre.trim(),
+          categoria_id: Number(objeto.categoria_id),
+        });
         setObjeto({ nombre: '', categoria_id: '' });
       }
       if (tipo === 'persona') {
-        await crearPersona(persona);
+        respuesta = await crearPersona({
+          nombre: persona.nombre.trim(),
+          apellido: persona.apellido.trim(),
+          curso: persona.curso.trim(),
+        });
         setPersona({ nombre: '', apellido: '', curso: '' });
       }
       if (tipo === 'categoria') {
-        await crearCategoria(categoria);
+        respuesta = await crearCategoria({ nombre: categoria.nombre.trim() });
         setCategoria({ nombre: '' });
       }
       if (tipo === 'prestamo') {
-        await crearPrestamo({
+        respuesta = await crearPrestamo({
           persona_id: Number(prestamo.persona_id),
           objeto_id: Number(prestamo.objeto_id),
         });
         setPrestamo({ persona_id: '', objeto_id: '' });
       }
 
-      setMensaje('Datos guardados correctamente.');
+      // El backend responde { mensaje, data } en los POST
+      setMensaje(respuesta?.mensaje ? `${respuesta.mensaje} correctamente.` : 'Datos guardados correctamente.');
       await cargar();
     } catch (e) {
       setError(e.message);

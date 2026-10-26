@@ -15,7 +15,13 @@ for (const variable of ['JWT_SECRET', 'BIBLIOTECARIO_USER', 'BIBLIOTECARIO_PASSW
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL, methods: ['GET', 'POST', 'PATCH', 'DELETE'] }));
+// FRONTEND_URL: una o varias URLs separadas por coma (ej. https://biblioteca.vercel.app).
+// Si no se define, se permite cualquier origen (cómodo solo para desarrollo).
+const origenes = (process.env.FRONTEND_URL || '').split(',').map((o) => o.trim().replace(/\/$/, '')).filter(Boolean);
+app.use(cors({
+    origin: origenes.length ? origenes : true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+}));
 app.use(express.json({ limit: '100kb' }));
 
 // Rutas públicas
