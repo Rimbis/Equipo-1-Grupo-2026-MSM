@@ -14,9 +14,13 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 22
-      - key: DATABASE_URL       # pegar la URI del Session pooler de Supabase
+      - key: DATABASE_URL                 # pegar la URI del Session pooler de Supabase
         sync: false
-      - key: JWT_SECRET         # Render lo genera solo
+      - key: JWT_SECRET                   # Render lo genera solo
         generateValue: true
-      - key: CORS_ORIGIN        # URL del frontend en Vercel, ej. https://biblioteca-tec.vercel.app
+      - key: FRONTEND_URL                 # URL del frontend en Vercel, sin barra final
+        sync: false
+      - key: BIBLIOTECARIO_USER           # usuario para iniciar sesión
+        sync: false
+      - key: BIBLIOTECARIO_PASSWORD_HASH  # hash bcrypt de la contraseña (ver Backend/.env.example)
         sync: false
