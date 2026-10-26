@@ -1,35 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const Prestamo = require('../models/Prestamo');
+const { asyncHandler, validarId, NegocioError } = require('../utils/errores');
 
-// Obtener préstamos activos
-router.get('/', async (req, res) => {
-    try {
-        const activos = await Prestamo.getActivos();
-        res.json(activos);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+router.param('id', validarId);
 
-// Registrar préstamo
-router.post('/add', async (req, res) => {
-    try {
-        const nuevo = await Prestamo.create(req.body);
-        res.status(201).json({ mensaje: 'Préstamo registrado', data: nuevo });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+router.get('/', asyncHandler(async (req, res) => {
+    res.json(await Prestamo.getActivos());
+}));
 
-// Devolver objeto
-router.patch('/:id/devolver', async (req, res) => {
-    try {
-        await Prestamo.devolver(req.params.id);
-        res.json({ mensaje: 'Objeto devuelto correctamente' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+router.post('/', asyncHandler(async (req, res) => {
+    const { persona_id, objeto_id } = req.body;
+    if (!Number.isInteger(persona_id) || persona_id <= 0 || !Number.isInteger(objeto_id) || objeto_id <= 0) {
+        throw new NegocioError('persona_id y objeto_id deben ser números enteros válidos', 400);
     }
-});
+    const nuevo = await Prestamo.create({ persona_id, objeto_id });
+    res.status(201).json({ mensaje: 'Préstamo registrado', data: nuevo });
+}));
+
+router.patch('/:id/devolver', asyncHandler(async (req, res) => {
+    await Prestamo.devolver(req.params.id);
+    res.json({ mensaje: 'Objeto devuelto correctamente' });
+}));
 
 module.exports = router;

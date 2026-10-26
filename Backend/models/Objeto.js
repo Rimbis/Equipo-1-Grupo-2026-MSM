@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const { objetos: ULTIMO_OBJETO_PROTEGIDO } = require('../config/registrosProtegidos');
+const { NegocioError } = require('../utils/errores');
 
 const Objeto = {
     getAll: async () => {
@@ -17,25 +18,25 @@ const Objeto = {
     create: async ({ nombre, categoria_id }) => {
         const result = await pool.query(
             'INSERT INTO objetos (nombre, categoria_id, estado) VALUES ($1, $2, $3) RETURNING *',
-            [nombre, categoria_id, 'disponible']
-        );
-        return result.rows[0];
-    },
-
-    updateEstado: async (id, estado) => {
-        const result = await pool.query(
-            'UPDATE objetos SET estado = $1 WHERE id = $2 RETURNING *',
-            [estado, id]
+            [nombre.trim(), categoria_id, 'disponible']
         );
         return result.rows[0];
     },
 
     delete: async (id) => {
-        const result = await pool.query(
-            'DELETE FROM objetos WHERE id = $1 AND id > $2 RETURNING *',
-            [id, ULTIMO_OBJETO_PROTEGIDO]
-        );
-        return result.rows[0];
+        if (id <= ULTIMO_OBJETO_PROTEGIDO) {
+            throw new NegocioError('Este objeto es predeterminado y no se puede eliminar.', 403);
+        }
+        try {
+            const result = await pool.query('DELETE FROM objetos WHERE id = $1 RETURNING *', [id]);
+            if (!result.rows[0]) throw new NegocioError('Objeto no encontrado', 404);
+            return result.rows[0];
+        } catch (err) {
+            if (err.code === '23503') {
+                throw new NegocioError('No se puede eliminar porque el objeto tiene préstamos asociados.', 409);
+            }
+            throw err;
+        }
     },
 };
 
