@@ -1,6 +1,7 @@
 // En desarrollo se deja vacío y Vite redirige /api -> http://localhost:4000 (ver vite.config.js).
-// En producción (Vercel) debe ser la URL del backend en Render, ej. https://biblioteca-tec-api.onrender.com
-const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+// En Vercel, vercel.json redirige /api al backend de Render.
+// Si se define VITE_API_URL, aceptar tanto el dominio como una URL terminada en /api.
+const API_URL = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '').replace(/\/api$/, '');
 
 class ErrorApi extends Error {
   constructor(mensaje, status) {

@@ -2,5 +2,8 @@
     "installCommand": "npm --prefix Frontend install",
     "buildCommand": "npm --prefix Frontend run build",
     "outputDirectory": "Frontend/dist",
-    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+    "rewrites": [
+      { "source": "/api/:path*", "destination": "https://biblioteca-tecnica-pedidosydesarrollo.onrender.com/api/:path*" },
+      { "source": "/(.*)", "destination": "/index.html" }
+    ]
   }
