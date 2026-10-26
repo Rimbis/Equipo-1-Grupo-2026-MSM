@@ -1,0 +1,22 @@
+# Blueprint de Render para el BACKEND (el frontend va en Vercel).
+# Render > New > Blueprint > elegir este repositorio.
+services:
+  - type: web
+    name: biblioteca-tec-api
+    runtime: node
+    plan: free
+    region: oregon            # cambiar a "virginia" o "frankfurt" si querés; ojo con la latencia a Supabase
+    rootDir: Backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: DATABASE_URL       # pegar la URI del Session pooler de Supabase
+        sync: false
+      - key: JWT_SECRET         # Render lo genera solo
+        generateValue: true
+      - key: CORS_ORIGIN        # URL del frontend en Vercel, ej. https://biblioteca-tec.vercel.app
+        sync: false

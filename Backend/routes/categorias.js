@@ -1,36 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const Categoria = require('../models/Categoria');
+const { asyncHandler, validarId, textoValido, NegocioError } = require('../utils/errores');
 
-// Obtener todas las categorías
-router.get('/', async (req, res) => {
-    try {
-        const todas = await Categoria.getAll();
-        res.json(todas);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+router.param('id', validarId);
 
-// Agregar categoría
-router.post('/add', async (req, res) => {
-    try {
-        const nueva = await Categoria.create(req.body);
-        res.status(201).json({ mensaje: 'Categoría creada', data: nueva });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+router.get('/', asyncHandler(async (req, res) => {
+    res.json(await Categoria.getAll());
+}));
 
-router.delete('/:id', async (req, res) => {
-    try {
-        const eliminada = await Categoria.delete(req.params.id);
-        if (!eliminada) return res.status(403).json({ message: 'Esta categoría es predeterminada y no se puede eliminar.' });
-        res.json({ mensaje: 'Categoría eliminada correctamente' });
-    } catch (error) {
-        if (error.code === '23503') return res.status(409).json({ message: 'No se puede eliminar porque hay objetos asociados a esta categoría.' });
-        res.status(500).json({ message: error.message });
+router.post('/', asyncHandler(async (req, res) => {
+    if (!textoValido(req.body.nombre)) {
+        throw new NegocioError('El nombre es requerido', 400);
     }
-});
+    const nueva = await Categoria.create({ nombre: req.body.nombre });
+    res.status(201).json({ mensaje: 'Categoría creada', data: nueva });
+}));
+
+router.delete('/:id', asyncHandler(async (req, res) => {
+    await Categoria.delete(req.params.id);
+    res.json({ mensaje: 'Categoría eliminada correctamente' });
+}));
 
 module.exports = router;
