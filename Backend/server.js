@@ -29,6 +29,7 @@ app.get('/api/health', async (req, res) => {
     const database = await pool.verificarConexion();
     res.status(database.ok ? 200 : 503).json({
         status: database.ok ? 'ok' : 'degraded',
+        build: 'login-db-v1',
         // El detalle del error solo se loguea, no se expone
         database: { ok: database.ok },
     });
