@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   crearCategoria,
   crearObjeto,
@@ -10,7 +11,9 @@ import {
 } from '../services/api';
 
 export default function CargaDatos() {
-  const [tipo, setTipo] = useState('objeto');
+  const [parametros] = useSearchParams();
+  const tipoInicial = parametros.get('tipo');
+  const [tipo, setTipo] = useState(['objeto', 'persona', 'categoria', 'prestamo'].includes(tipoInicial) ? tipoInicial : 'objeto');
   const [categorias, setCategorias] = useState([]);
   const [personas, setPersonas] = useState([]);
   const [objetos, setObjetos] = useState([]);
@@ -20,7 +23,7 @@ export default function CargaDatos() {
   // NUEVO: mientras guardando === true, el formulario está "ocupado"
   const [guardando, setGuardando] = useState(false);
 
-  const [objeto, setObjeto] = useState({ nombre: '', categoria_id: '' });
+  const [objeto, setObjeto] = useState({ nombre: '', categoria_id: parametros.get('categoria') || '' });
   const [persona, setPersona] = useState({ nombre: '', apellido: '', curso: '' });
   const [categoria, setCategoria] = useState({ nombre: '' });
   const [prestamo, setPrestamo] = useState({ persona_id: '', objeto_id: '' });
@@ -61,7 +64,7 @@ export default function CargaDatos() {
           nombre: objeto.nombre.trim(),
           categoria_id: Number(objeto.categoria_id),
         });
-        setObjeto({ nombre: '', categoria_id: '' });
+        setObjeto({ nombre: '', categoria_id: parametros.get('categoria') || '' });
       }
       if (tipo === 'persona') {
         respuesta = await crearPersona({
