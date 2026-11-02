@@ -17,8 +17,8 @@ Biblioteca Tec centraliza el inventario y los préstamos de materiales escolares
 ### Aplicación publicada
 
 - **Frontend:** https://equipo-1-grupo-2026-msm.vercel.app
-- **Backend:** https://biblioteca-tecnica-msm-api.onrender.com
-- **Estado del servicio y conexión a la base:** https://biblioteca-tecnica-msm-api.onrender.com/api/health
+- **Backend:** https://biblioteca-tecnica-pedidosydesarrollo.onrender.com
+- **Estado del servicio y conexión a la base:** https://biblioteca-tecnica-pedidosydesarrollo.onrender.com/api/health
 
 El frontend está alojado en Vercel, la API en Render y la base PostgreSQL en Supabase. Las solicitudes del frontend a `/api` pasan por el proxy configurado en Vercel y se envían a Render.
 
@@ -217,6 +217,10 @@ Las pruebas de escritura se ejecutaron dentro de una transacción controlada con
 La integración entre Vercel, Render y Supabase funciona correctamente. Las funciones evaluadas se completaron sin errores observados y el sistema está disponible para su uso cotidiano. Este resultado describe las pruebas funcionales registradas y el estado de funcionamiento confirmado para la entrega; no constituye una garantía de ausencia de fallos en cualquier situación futura.
 
 No hay una suite automatizada ni un comando `npm test`. Las comprobaciones registradas no incluyen pruebas de carga, concurrencia real, todos los navegadores y dispositivos ni una auditoría integral de seguridad.
+
+### Corrección del destino del login en Vercel
+
+Se detectó que el proxy de Vercel enviaba las solicitudes a un backend distinto del que tiene configurada la cuenta entregada. Se comprobó el inicio de sesión con las credenciales documentadas en ambos servicios: `pedidosydesarrollo` respondió HTTP 200 con un token y `msm-api` respondió HTTP 401. Se corrigió el destino de `/api/:path*` en `vercel.json` y `Frontend/vercel.json` para utilizar `https://biblioteca-tecnica-pedidosydesarrollo.onrender.com` en ambos modos de despliegue. No fue necesario modificar la contraseña ni los registros de la base de datos.
 
 ### Actualización de categorías y cierre de sesión del 2 de noviembre de 2026
 
