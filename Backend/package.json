@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "crear-admin": "node scripts/crearAdmin.js",
     "dev": "node --watch server.js"
   },
   "dependencies": {

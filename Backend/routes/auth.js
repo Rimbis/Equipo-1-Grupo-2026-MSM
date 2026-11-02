@@ -16,6 +16,9 @@ const limitarLogin = rateLimit({
     message: { message: 'Demasiados intentos. Probá de nuevo en unos minutos.' },
 });
 
+const Usuario = require('../models/Usuario');
+const HASH_DUMMY = bcrypt.hashSync('dummy', 10); // para que el tiempo no delate si el usuario existe
+
 router.post('/login', limitarLogin, asyncHandler(async (req, res) => {
     const { usuario, password } = req.body;
 
@@ -23,16 +26,15 @@ router.post('/login', limitarLogin, asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Usuario y contraseña son requeridos' });
     }
 
-    // Se compara el hash siempre, para no revelar por tiempo si el usuario existe.
-    const passwordOk = await bcrypt.compare(password, process.env.BIBLIOTECARIO_PASSWORD_HASH);
-    const usuarioOk = usuario === process.env.BIBLIOTECARIO_USER;
+    const fila = await Usuario.buscarPorUsuario(usuario.trim().toLowerCase());
+    const passwordOk = await bcrypt.compare(password, fila ? fila.password_hash : HASH_DUMMY);
 
-    if (!usuarioOk || !passwordOk) {
+    if (!fila || !passwordOk) {
         return res.status(401).json({ message: 'Usuario o contraseña incorrectos' });
     }
 
     const token = jwt.sign(
-        { sub: usuario, rol: 'bibliotecario' },
+        { sub: fila.usuario, rol: fila.rol },
         process.env.JWT_SECRET,
         { algorithm: 'HS256', expiresIn: '8h' }
     );
