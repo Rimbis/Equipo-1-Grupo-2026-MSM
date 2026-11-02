@@ -33,8 +33,8 @@ function Layout({ onLogout }) {
               <span aria-hidden="true">{icono}</span>{label}
             </NavLink>
           ))}
-          <button type="button" onClick={onLogout}>Cerrar sesión</button>
         </nav>
+        <button className="boton-cerrar-sesion" type="button" onClick={onLogout}>Cerrar sesión</button>
       </header>
       <main className="contenido">
         <Outlet />
