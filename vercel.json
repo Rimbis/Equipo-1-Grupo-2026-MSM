@@ -1,6 +1,9 @@
   {
     "installCommand": "npm --prefix Frontend install",
-    "buildCommand": "npm --prefix Frontend run build",
+    "buildCommand": "VITE_API_URL= npm --prefix Frontend run build",
     "outputDirectory": "Frontend/dist",
-    "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+    "rewrites": [
+      { "source": "/api/:path*", "destination": "https://biblioteca-tecnica-msm-api.onrender.com/api/:path*" },
+      { "source": "/(.*)", "destination": "/index.html" }
+    ]
   }
