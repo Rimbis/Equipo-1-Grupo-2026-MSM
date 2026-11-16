@@ -207,6 +207,24 @@ Las comprobaciones registradas el 26 de octubre de 2026 finalizaron correctament
 
 La API publicada permitió consultar 74 objetos, 4 personas, 7 categorías y ningún préstamo activo en el momento de la comprobación. La revisión de coherencia no encontró diferencias entre los objetos marcados como prestados y sus préstamos activos.
 
+### Simulación de incidencias y dedicación semanal
+
+> **Ejercicio ficticio para documentar el proyecto.** Los problemas y las horas de esta sección son escenarios plausibles inventados a partir de las funciones de Biblioteca Tec y de las fases del diagrama de Gantt. No son incidencias observadas, partes horarios ni un registro de asistencia. El Gantt organiza el trabajo por meses, no por semanas, y no descuenta feriados, clases suspendidas ni otras interrupciones; por eso las horas son estimaciones ilustrativas y no deben presentarse como horas reales trabajadas.
+
+| Semana ilustrativa | Fase del Gantt | Incidencia simulada y resolución posible | Micaela (h) | Santiago (h) | María (h) | Total estimado (h) |
+|---|---|---|---:|---:|---:|---:|
+| 4–8 de mayo | Análisis | Se descubre que el inventario debe distinguir disponibilidad de existencia física. Se acuerda registrar el estado a partir de los préstamos activos. | 2 | 2 | 2 | 6 |
+| 15–19 de junio | Diseño de datos | Un objeto prestado podría aparecer como disponible si se actualiza el préstamo y el objeto por separado. Se define una operación transaccional y la regla para impedir préstamos activos duplicados. | 2 | 3 | 2 | 7 |
+| 20–24 de julio | Desarrollo backend | Una consulta podría fallar si los identificadores llegan como texto o los datos contienen espacios. Se agregan validaciones y consultas parametrizadas, y se normaliza la entrada pertinente. | 2 | 4 | 2 | 8 |
+| 17–21 de agosto | Desarrollo frontend y backend | Al vencer la sesión, una pantalla podría seguir visible aunque la API rechace las solicitudes. Se plantea verificar el token al cargar la aplicación y redirigir al login ante una sesión inválida. | 3 | 3 | 2 | 8 |
+| 21–25 de septiembre | Pruebas | Una segunda devolución podría alterar el estado o generar una respuesta confusa. Se valida que la API rechace la devolución repetida y se muestra un mensaje claro. | 2 | 2 | 3 | 7 |
+| 12–16 de octubre | Pruebas y README | El frontend podría apuntar a un backend distinto del que contiene la cuenta configurada. Se comparan los destinos del proxy en Vercel y se documenta la configuración correcta. | 2 | 3 | 3 | 8 |
+| 26–30 de octubre | Despliegue y documentación | Una categoría sin objetos podría parecer rota al seleccionarla. Se prevé un estado vacío explícito y una forma directa de agregar un objeto a esa categoría. | 3 | 2 | 3 | 8 |
+| 2–6 de noviembre | Documentación y entrega | En pantallas chicas, los enlaces de navegación podrían dificultar encontrar el cierre de sesión. Se revisa la disposición móvil y se documenta la salida segura. | 2 | 2 | 3 | 7 |
+| **Total de esta muestra** |  | **Estimación ficticia; no representa el total del proyecto.** | **18** | **21** | **20** | **59** |
+
+Las fechas semanales son una distribución ilustrativa de actividades dentro de los meses indicados en el Gantt; el archivo no especifica días ni horas. Si se necesita un registro real, el equipo debe reemplazar esta muestra con sus propios datos y excluir o anotar por separado las semanas afectadas por feriados, clases y otras interrupciones.
+
 Las pruebas de escritura se ejecutaron dentro de una transacción controlada contra Supabase y finalizaron con **ROLLBACK**. Los registros creados para probar se descartaron. Estas verificaciones ejercitaron los modelos del backend; no constituyen un envío completo de cada formulario desde el navegador.
 
 #### Conclusión de las pruebas
