@@ -1,7 +1,5 @@
 const pool = require('../config/db');
 
-// La tabla se crea sola la primera vez (CREATE TABLE IF NOT EXISTS), así no hay
-// que correr SQL a mano en Supabase para que funcione el login.
 let tablaLista = null;
 function asegurarTabla() {
     if (!tablaLista) {
